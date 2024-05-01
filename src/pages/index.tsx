@@ -392,7 +392,7 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="mt-12 flex flex-col hidden">
+              <div className="mt-12 flex flex-col ">
                 <div className="w-3/4 mx-auto relative">
                   <input
                     className="px-8 py-4 rounded shadow w-full text-medium outline-emerald-500"
