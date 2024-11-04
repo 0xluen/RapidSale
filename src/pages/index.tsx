@@ -2,18 +2,37 @@
 import { NumberInput } from "intl-number-input";
 import { useEffect, useRef, useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useAccount, useContractWrite } from "wagmi";
+import { useAccount, useContractWrite , useContractRead} from "wagmi";
 import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import ABI from "../assets/ABI.json";
 import { ethers } from "ethers";
+
+
 export default function Home() {
 
-  const [contractAddress,setContractAddress]=useState("0x228580Db7A5E713755526B49eBec6f68F98cf4b8")
+  const [contractAddress,setContractAddress]=useState("0xC3Bb6cD69E030Bb95753173B0B6fFCD0081D1857") /// token kontratı
+
+  const contractSale = "0x7f2219AC2840A0D3BA8690AE07e977E0BB7b5Df8"
+  
+  const usdtContract = "0x5D3a221872852Aa6581DFFe1aAC46E9b477C1944"
+
+  const targetSold = 78 // * 1000 
+  const fakeCount = 0 
+
+  const baseURI = "https://rapid-sale.vercel.app/"
+
+
+  const price = 0.18
+
   const [referralCode, setReferralCode] = useState("");
   const [isConnected, setIsConnected] = useState(false);
-  const creator = "0xc0841c87cbe8f7bb3b6626f99977a88426336070";
-  const [soldToken,setSold]=useState(0)
+
+  
+
+
+
+
   function copy(text:any) {
     var dummyTextarea = document.createElement('textarea');
     dummyTextarea.value = text;
@@ -22,21 +41,28 @@ export default function Home() {
     document.execCommand('copy');
     document.body.removeChild(dummyTextarea);
     setContractAddress('Copied Address!')
+
   }
 
-  const provider = new ethers.providers.JsonRpcProvider("https://twilight-magical-fire.bsc.discover.quiknode.pro/2e3a96e617a531b9cf713af9eb2faab8525d95a8/")
-  const contract = new ethers.Contract("0x754918f7ca3bf3b4217961fe128bf25c9cf83422", ABI, provider);
+  
+  
 
-  useEffect(()=>{
-  contract.tokensSold()
-  .then((result: string) => {
-      setSold(Number(result))
-  })
-  .catch((err: string) => {
-    console.error(err);
+  const tokenSold: any = useContractRead({
+    address: contractSale,
+    abi: ABI,
+    functionName: "getTotalUsdtCollected",
+    args: [],
+
+    enabled: true,
+    watch: true,
+    select: (data: any) => {
+      return data;
+    },
   });
-  }
-  ,[])
+
+
+
+
 
   const account = useAccount({
     onConnect: ({ address }) => {
@@ -56,8 +82,9 @@ export default function Home() {
   const [usdInputEl, setUsdInput] = useState<any>(null);
 
   const router = useRouter();
+
   const [refer, setRefer] = useState(
-    "0xc0841C87cbe8F7bB3B6626F99977A88426336070"
+    "0x0000000000000000000000000000000000000000"
   );
 
   useEffect(() => {
@@ -147,7 +174,7 @@ export default function Home() {
         type: "function",
       },
     ],
-    address: "0x55d398326f99059ff775485246999027b3197955",
+    address: usdtContract as any ,
     functionName: "approve",
     mode: "recklesslyUnprepared" as any,
     value: BigInt(0),
@@ -163,7 +190,7 @@ export default function Home() {
     try {
       const result = await approveContract.writeAsync({
         args: [
-          "0x754918F7ca3Bf3B4217961FE128bF25c9CF83422",
+          contractSale,
           BigInt(usdInputEl.getValue().number * 10 ** 18),
         ],
       });
@@ -195,30 +222,9 @@ export default function Home() {
   }
 
   const buyContract = useContractWrite({
-    abi: [
-      {
-   "inputs":[
-      {
-         "internalType":"uint256",
-         "name":"totalPrice",
-         "type":"uint256"
-      },
-      {
-         "internalType":"address",
-         "name":"referralAddress",
-         "type":"address"
-      }
-   ],
-   "name":"buyTokens",
-   "outputs":[
-      
-   ],
-   "stateMutability":"nonpayable",
-   "type":"function"
-},
-    ],
-    address: "0x754918F7ca3Bf3B4217961FE128bF25c9CF83422",
-    functionName: "buyTokens",
+    abi: ABI,
+    address: contractSale,
+    functionName: "buy",
     mode: "recklesslyUnprepared" as any,
     value: BigInt(0),
   });
@@ -264,7 +270,7 @@ export default function Home() {
     e.preventDefault();
     const str =  referralCode;
     var dummyTextarea = document.createElement('textarea');
-    dummyTextarea.value = "https://rapid-sale.vercel.app/"+"?refer="+str;
+    dummyTextarea.value = baseURI +"?refer="+str;
     document.body.appendChild(dummyTextarea);
     dummyTextarea.select();
     document.execCommand('copy');
@@ -286,13 +292,13 @@ export default function Home() {
 
             <div>
               <ul className="flex items-center md:mt-0 mt-4 gap-6">
-                <li className="text-sm text-gray-500 hover:text-gray-900">
+                <li className="text-sm text-gray-200 hover:text-gray-500">
                   <a href="https://rapidchain.io/">Web</a>
                 </li>
-                <li className="text-sm text-gray-500 hover:text-gray-900">
+                <li className="text-sm text-gray-200 hover:text-gray-500">
                   <a href="https://twitter.com/RapidChain">Twitter</a>
                 </li>
-                <li className="text-sm text-gray-500 hover:text-gray-900">
+                <li className="text-sm text-gray-200 hover:text-gray-500">
                   <a href="https://t.me/RapidChainOfficial">Telegram</a>
                 </li>
                 <li className="md:block hidden">
@@ -309,83 +315,12 @@ export default function Home() {
 
         <div className="max-w-screen-xl w-full mx-auto flex flex-col z-50">
           <div className="flex md:flex-row flex-col gap-6">
-            <div className="bg-gray-100/50 backdrop-blur-3xl shadow px-8 py-6 rounded my-12 w-full md:w-1/4 shrink-1 grow-0">
-              <div className="mb-4 relative">
-                <h3 className="text-sm text-black/50 absolute top-0 left-0">
-                  Token:
-                </h3>
-                <div className="flex items-center gap-2 pt-8 text-center justify-center font-semibold text-xl">
-                  RAPID
-                </div>
-              </div>
-              <hr />
-              <div className="mb-4 mt-4 relative">
-                <h3 className="text-sm text-black/50 absolute top-0 left-0">
-                  Chain:
-                </h3>
-                <div className="flex items-center gap-2 pt-8 text-center justify-center font-semibold text-xl">
-                  BSC + ETH + RAPID
-                </div>
-              </div>
-              <hr />
-              <div className="mb-4 mt-4 relative">
-                <h3 className="text-sm text-black/50 absolute top-0 left-0">
-                  Total Supply:
-                </h3>
-                <div className="flex flex-col items-center gap-2 pt-8 text-center justify-center font-semibold text-xl">
-                  100M
-                </div>
-              </div>
-              <hr />
-              <div className="mb-4 mt-4 relative">
-                <h3 className="text-sm text-black/50 absolute top-0 left-0">
-                  Price:
-                </h3>
-                <div className="flex flex-col items-center gap-2 pt-8 text-center justify-center font-semibold text-xl">
-                 1 RAPID = 0.18$
-                </div>
-              </div>
-              <hr />
-              <div className="mb-4 mt-4 relative">
-                <h3 className="text-sm text-black/50 absolute top-0 left-0">
-                  Token Address:
-                </h3>
-                <div className="flex items-center pt-8 text-center justify-center overflow-hidden">
-                  <p className="font-semibold truncate whitespace-nowrap group pt-2 relative">
-                    {contractAddress}
-                    <button onClick={e=>copy("0x228580Db7A5E713755526B49eBec6f68F98cf4b8")} className="transition opacity-0 group group-hover:opacity-100 absolute p-1.5 top-1/2 transform -translate-y-1/2 right-0 h-8 w-8 rounded bg-black text-white text-lg">
-                      <svg
-                        className="fill-white group-focus:hidden block"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M7 4V2H17V4H20.0066C20.5552 4 21 4.44495 21 4.9934V21.0066C21 21.5552 20.5551 22 20.0066 22H3.9934C3.44476 22 3 21.5551 3 21.0066V4.9934C3 4.44476 3.44495 4 3.9934 4H7ZM7 6H5V20H19V6H17V8H7V6ZM9 4V6H15V4H9Z"></path>
-                      </svg>
-                      <svg
-                        className="group-focus:block hidden fill-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M10.0007 15.1709L19.1931 5.97852L20.6073 7.39273L10.0007 17.9993L3.63672 11.6354L5.05093 10.2212L10.0007 15.1709Z"></path>
-                      </svg>
-                    </button>
-                  </p>
-                </div>
-              </div>
-              <hr />
-              <div className="h-full p-8">
-                <img
-                  className="aspect-square grayscale opacity-50"
-                  src="/logo_transparent.png"
-                ></img>
-              </div>
-            </div>
-            <section className="bg-gray-100/50 backdrop-blur-3xl shadow px-8 py-6 rounded my-12 w-full md:w-3/4 shrink-1 grow-0">
+          <section className="bg-white/5 backdrop-blur-3xl shadow px-8 py-6 rounded my-12 w-full md:w-3/4 shrink-1 grow-0">
               <div>
                 <h2 className="text-xl text-semibold">
                   RAPIDCHAIN Privatesale #2 of 2
                 </h2>
-                <p className="text-light mt-2 text-sm text-black/60">
+                <p className="text-light mt-2 text-sm text-gray-200/75">
                   It is the 2nd special sale of RapidChain Main Coin, RAPID. The amount of funds collected in the 1st private sale was 74,600 USDT. 
                   The minimum purchase amount is 10 USDT and the maximum purchase amount is 5000 USDT. After making a purchase, your RAPIDs will be sent to your wallet immediately. 
                   This transaction is irreversible.
@@ -395,7 +330,7 @@ export default function Home() {
               <div className="mt-12 flex flex-col ">
                 <div className="w-3/4 mx-auto relative">
                   <input
-                    className="px-8 py-4 rounded shadow w-full text-medium outline-emerald-500"
+                    className="px-8 py-4 rounded shadow w-full text-medium outline-emerald-500 text-black"
                     placeholder="USD Amount"
                     ref={usdInput}
                   ></input>
@@ -408,7 +343,7 @@ export default function Home() {
                 <div className="my-4 mx-auto">
                   <div className="h-8 w-8">
                     <svg
-                      className="fill-black"
+                      className="fill-white"
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                     >
@@ -431,7 +366,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="mt-3 w-3/4 mx-auto flex gap-2 hidden">
+              <div className="mt-3 w-3/4 mx-auto flex gap-2 ">
                 <button
                   disabled={
                     !account.isConnected &&
@@ -459,24 +394,34 @@ export default function Home() {
                   Buy
                 </button>
               </div>
-              <div className="mx-auto text-center mt-4 text-black/50 text-sm">
+
+
+
+              <div className="mx-auto text-center mt-4 text-gray-200/75 text-sm hidden">
           
                 <br />
                 This presale will be open from{" "}
-                <b className="text-black"> Finished.</b>
+                <b className="text-gray-200/90 "> Finished.</b>
               </div>
+
+
+
               <div className="mb-4 mt-4 relative">
-                <h3 className="text-sm text-black/50 absolute top-0 left-0">
-                  Funded: ${((soldToken*0.18)/100  + 13200).toFixed(2) }
+                <h3 className="text-sm text-gray-200/75 absolute top-0 left-0">
+                  Funded: ${(Number(tokenSold.data )).toFixed(2) }
                 </h3>
                 <div className="flex flex-col items-center gap-2 pt-8 text-center justify-center font-semibold text-xl">
-                  <div className="text-xs text-black/50">
-                    {((soldToken*0.18)/100 + 13200).toFixed(0)} / 78.000
+                  <div className="text-xs text-gray-200/75">
+                    {Number(tokenSold.data ).toFixed(0)} / {targetSold}.000
                   </div>
                   <div className="w-full h-2 rounded-full bg-gray-100">
-                    <div className="w-full h-full rounded-full bg-gradient-to-r from-green-400 to-blue-500"></div>
+
+
+                    <div className= "h-full rounded-full bg-gradient-to-r from-green-400 to-blue-500" style={{width:((Number(tokenSold.data )+ fakeCount) / (targetSold * 1000) * 100 ).toFixed(0)+'%'}}></div>
+
+
                   </div>
-                  <div className="text-xs text-black/50 ml-auto">100%</div>
+                  <div className="text-xs text-gray-200/75 ml-auto">{((Number(tokenSold.data) + fakeCount) / (targetSold * 1000) * 100 ).toFixed(0)}%</div>
                 </div>
               </div>
 
@@ -484,7 +429,7 @@ export default function Home() {
                 <h3 className="text-xl text-semibold">
                   Use your reference code and won USDT!
                 </h3>
-                <p className="text-light mt-2 text-sm text-black/60">
+                <p className="text-light mt-2 text-sm text-gray-200/75">
                   Share your reference code with your friends and earn 5% of
                   their purchase amount in USDT tokens. Your friends will also
                   receive a 5% bonus on their purchase amount.
@@ -493,7 +438,7 @@ export default function Home() {
                 <div className="mt-4 flex flex-col">
                   <div className="flex md:flex-row flex-col w-3/4 mx-auto relative">
                     <input
-                      value={"https://rapid-sale.vercel.app/?refer=" + referralCode}
+                      value={baseURI+ referralCode}
                       disabled
                       className="px-8 py-4 rounded shadow w-full text-medium outline-emerald-500"
                       placeholder="Reference Code"
@@ -512,6 +457,78 @@ export default function Home() {
                 </div>
               </div>}
             </section>
+            <div className="bg-white/5  backdrop-blur-3xl shadow px-8 py-6 rounded my-12 w-full md:w-1/4 shrink-1 grow-0">
+              <div className="mb-4 relative">
+                <h3 className="text-sm text-gray-200/75 absolute top-0 left-0">
+                  Token:
+                </h3>
+                <div className="flex items-center gap-2 pt-8 text-center justify-center font-semibold text-xl">
+                  RAPID
+                </div>
+              </div>
+              <hr />
+              <div className="mb-4 mt-4 relative">
+                <h3 className="text-sm text-gray-200/75 absolute top-0 left-0">
+                  Chain:
+                </h3>
+                <div className="flex items-center gap-2 pt-8 text-center justify-center font-semibold text-xl">
+                  BSC + ETH + RAPID
+                </div>
+              </div>
+              <hr />
+              <div className="mb-4 mt-4 relative">
+                <h3 className="text-sm text-gray-200/75 absolute top-0 left-0">
+                  Total Supply:
+                </h3>
+                <div className="flex flex-col items-center gap-2 pt-8 text-center justify-center font-semibold text-xl">
+                  100M
+                </div>
+              </div>
+              <hr />
+              <div className="mb-4 mt-4 relative">
+                <h3 className="text-sm text-gray-200/75 absolute top-0 left-0">
+                  Price:
+                </h3>
+                <div className="flex flex-col items-center gap-2 pt-8 text-center justify-center font-semibold text-xl">
+                 1 RAPID = {price}$
+                </div>
+              </div>
+              <hr />
+              <div className="mb-4 mt-4 relative">
+                <h3 className="text-sm text-gray-200/75 absolute top-0 left-0">
+                  Token Address:
+                </h3>
+                <div className="flex items-center pt-8 text-center justify-center overflow-hidden">
+                  <p className="font-semibold truncate whitespace-nowrap group pt-2 relative">
+                    {contractAddress}
+                    <button onClick={e=>copy(contractAddress)} className="transition opacity-0 group group-hover:opacity-100 absolute p-1.5 top-1/2 transform -translate-y-1/2 right-0 h-8 w-8 rounded bg-black text-white text-lg">
+                      <svg
+                        className="fill-white group-focus:hidden block"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M7 4V2H17V4H20.0066C20.5552 4 21 4.44495 21 4.9934V21.0066C21 21.5552 20.5551 22 20.0066 22H3.9934C3.44476 22 3 21.5551 3 21.0066V4.9934C3 4.44476 3.44495 4 3.9934 4H7ZM7 6H5V20H19V6H17V8H7V6ZM9 4V6H15V4H9Z"></path>
+                      </svg>
+                      <svg
+                        className="group-focus:block hidden fill-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M10.0007 15.1709L19.1931 5.97852L20.6073 7.39273L10.0007 17.9993L3.63672 11.6354L5.05093 10.2212L10.0007 15.1709Z"></path>
+                      </svg>
+                    </button>
+                  </p>
+                </div>
+              </div>
+              <hr />
+              <div className="h-full p-8">
+                <img
+                  className="aspect-square grayscale opacity-50"
+                  src="/logo_transparent.png"
+                ></img>
+              </div>
+            </div>
+           
           </div>
         </div>
 

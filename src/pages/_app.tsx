@@ -7,19 +7,19 @@ import {
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
-import { bsc } from 'wagmi/chains';
+import { bsc , sepolia } from 'wagmi/chains'; // version "^1.2.1"
 import { publicProvider } from 'wagmi/providers/public';
 
 const { chains, publicClient } = configureChains(
-  [bsc],
+  [sepolia],
   [
     publicProvider()
   ]
 );
 
 const { connectors } = getDefaultWallets({
-  appName: 'My RainbowKit App',
-  projectId: 'YOUR_PROJECT_ID',
+  appName: "Metta",
+  projectId: "bf4b1e058833c937b30ecbf93afa757f",
   chains
 });
 

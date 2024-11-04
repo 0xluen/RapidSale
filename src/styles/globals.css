@@ -5,7 +5,8 @@
 @layer base {
 
     body {
-        @apply bg-gray-100 overflow-x-hidden;
+        @apply bg-black overflow-x-hidden;
+        color:white;
     }
 }
 
