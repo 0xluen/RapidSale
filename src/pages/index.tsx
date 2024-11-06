@@ -6,6 +6,8 @@ import { useAccount, useContractWrite , useContractRead} from "wagmi";
 import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import ABI from "../assets/ABI.json";
+import erc20ABI from "../assets/erc20.json";
+
 import { ethers } from "ethers";
 
 
@@ -13,7 +15,7 @@ export default function Home() {
 
   const [contractAddress,setContractAddress]=useState("0xC3Bb6cD69E030Bb95753173B0B6fFCD0081D1857") /// token kontratı
 
-  const contractSale = "0x7f2219AC2840A0D3BA8690AE07e977E0BB7b5Df8"
+  const contractSale = "0x7d8Fd713F6757cfbe7489014C407ae6650d0BdcB"
   
   const usdtContract = "0x5D3a221872852Aa6581DFFe1aAC46E9b477C1944"
 
@@ -23,7 +25,7 @@ export default function Home() {
   const baseURI = "https://rapid-sale.vercel.app/"
 
 
-  const price = 0.18
+  const price = 0.07
 
   const [referralCode, setReferralCode] = useState("");
   const [isConnected, setIsConnected] = useState(false);
@@ -87,6 +89,13 @@ export default function Home() {
     "0x0000000000000000000000000000000000000000"
   );
 
+
+
+
+
+
+
+
   useEffect(() => {
     let _rapidTokenEl = new NumberInput({
       el: rapidInput.current as any,
@@ -107,7 +116,7 @@ export default function Home() {
         },
       },
       onInput: (value) => {
-        _rapidTokenEl.setValue((value.number || 0) * 5.55);
+        _rapidTokenEl.setValue((value.number || 0) / price);
       },
     });
 
@@ -144,6 +153,22 @@ export default function Home() {
       );
     };
   }
+
+
+  const { address } = useAccount();
+
+
+  const allowanceReadContract = useContractRead({
+    address: usdtContract as any,
+    abi: erc20ABI,
+    functionName: 'allowance',
+    args: [address, contractSale],
+    enabled: !!address,
+    watch: true,
+
+    select: (data) => Number(data) / 1e18,
+  });
+
 
   const approveContract = useContractWrite({
     abi: [
@@ -266,6 +291,7 @@ export default function Home() {
   }
 
   const [isCopied, setIsCopied] = useState(false);
+
   function handleCopyClick(e: any) {
     e.preventDefault();
     const str =  referralCode;
@@ -321,9 +347,7 @@ export default function Home() {
                   RAPIDCHAIN Privatesale #2 of 2
                 </h2>
                 <p className="text-light mt-2 text-sm text-gray-200/75">
-                  It is the 2nd special sale of RapidChain Main Coin, RAPID. The amount of funds collected in the 1st private sale was 74,600 USDT. 
-                  The minimum purchase amount is 10 USDT and the maximum purchase amount is 5000 USDT. After making a purchase, your RAPIDs will be sent to your wallet immediately. 
-                  This transaction is irreversible.
+                Welcome to the Rapid Chain Public Sale event, building the future of blockchain technology! In this round, Rapid Token ($RAPID) is available for purchase at $0.07 USD. The tokens you acquire should not be transferred to another wallet.
                 </p>
               </div>
 
@@ -456,6 +480,16 @@ export default function Home() {
                   </div>
                 </div>
               </div>}
+
+              <div>
+              
+                <p className="text-light mt-5 text-sm text-gray-200/75">
+                With Rapid Chain, get the chance to join a unique blockchain network that offers high transaction speeds, zero transfer fees and innovative solutions. We aim to spread our technology to all sectors and provide a fast, secure infrastructure.
+
+Get ready to join the blockchain of the future...
+                </p>
+
+              </div> 
             </section>
             <div className="bg-white/5  backdrop-blur-3xl shadow px-8 py-6 rounded my-12 w-full md:w-1/4 shrink-1 grow-0">
               <div className="mb-4 relative">
@@ -472,7 +506,7 @@ export default function Home() {
                   Chain:
                 </h3>
                 <div className="flex items-center gap-2 pt-8 text-center justify-center font-semibold text-xl">
-                  BSC + ETH + RAPID
+                  BSC + ETH + TON
                 </div>
               </div>
               <hr />
@@ -481,7 +515,7 @@ export default function Home() {
                   Total Supply:
                 </h3>
                 <div className="flex flex-col items-center gap-2 pt-8 text-center justify-center font-semibold text-xl">
-                  100M
+                  200M
                 </div>
               </div>
               <hr />
@@ -524,7 +558,7 @@ export default function Home() {
               <div className="h-full p-8">
                 <img
                   className="aspect-square grayscale opacity-50"
-                  src="/logo_transparent.png"
+                  src="/logo.png"
                 ></img>
               </div>
             </div>
