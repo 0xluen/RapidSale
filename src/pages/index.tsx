@@ -13,11 +13,11 @@ import { ethers } from "ethers";
 
 export default function Home() {
 
-  const [contractAddress,setContractAddress]=useState("0xC3Bb6cD69E030Bb95753173B0B6fFCD0081D1857") /// token kontratı
+  const [contractAddress,setContractAddress]=useState("0x228580Db7A5E713755526B49eBec6f68F98cf4b8") /// token kontratı
 
-  const contractSale = "0x7d8Fd713F6757cfbe7489014C407ae6650d0BdcB"
+  const contractSale = "0xB051573989265eAe51aD3c9Ad65Eff01534BA137"
   
-  const usdtContract = "0x5D3a221872852Aa6581DFFe1aAC46E9b477C1944"
+  const usdtContract = "0x55d398326f99059fF775485246999027B3197955"
 
   const targetSold = 78 // * 1000 
   const fakeCount = 0 
@@ -29,7 +29,7 @@ export default function Home() {
 
   const [referralCode, setReferralCode] = useState("");
   const [isConnected, setIsConnected] = useState(false);
-
+  const [usdt_ , setUSDT ] = useState(0)
   
 
 
@@ -93,6 +93,7 @@ export default function Home() {
 
 
 
+console.log(usdt_);
 
 
 
@@ -117,12 +118,13 @@ export default function Home() {
       },
       onInput: (value) => {
         _rapidTokenEl.setValue((value.number || 0) / price);
+        setUSDT(value.number || 0)
+
       },
     });
 
     setRapidTokenEl(_rapidTokenEl);
-    setUsdInput(_usdInputEl);
-
+    setUsdInput(_usdInputEl); /// lalalalalala
     initMouseFollow();
   }, []);
 
@@ -395,27 +397,27 @@ export default function Home() {
                   disabled={
                     !account.isConnected &&
                     account.isDisconnected &&
-                    !isApproved
+                    Number(allowanceReadContract.data) < usdt_
                   }
                   onClick={handleApproveClick}
                   className={
                     "bg-black disabled:opacity-20 w-full hover:bg-white hover:text-black text-white px-6 py-3 rounded text-md text-semibold transition " +
-                    (isApproved ? "hidden" : "")
+                    ( Number(allowanceReadContract.data) >= usdt_ || account.isDisconnected  ? "hidden" : "")
                   }
                 >
                   Approve
                 </button>
                 <button
                   disabled={
-                    !account.isConnected && account.isDisconnected && isApproved
+                    account.isDisconnected && Number(allowanceReadContract.data) >= usdt_
                   }
                   onClick={handleBuyClick}
                   className={
                     "bg-black  disabled:opacity-20 w-full hover:bg-white hover:text-black text-white px-6 py-3 rounded text-md text-semibold transition " +
-                    (!isApproved ? "hidden" : "")
+                    (Number(allowanceReadContract.data)<usdt_ ? "hidden" : "")
                   }
                 >
-                  Buy
+                  { account.isDisconnected ?"Please Connect Wallet" :  "Buy"}
                 </button>
               </div>
 
@@ -429,8 +431,17 @@ export default function Home() {
               </div>
 
 
-
               <div className="mb-4 mt-4 relative">
+               
+                <div className="flex flex-col items-center gap-2 mb-5  pt-8 text-center justify-center font-semibold text-xl">
+                  <div className="text-xs text-gray-200/75">
+                    ${(Number(tokenSold.data )).toFixed(2)}  / {(Number(tokenSold.data ) / price).toFixed(2)} RAPID
+                  </div>
+                 
+                </div>
+              </div>
+
+             { false && <div className="mb-4 mt-4 relative">
                 <h3 className="text-sm text-gray-200/75 absolute top-0 left-0">
                   Funded: ${(Number(tokenSold.data )).toFixed(2) }
                 </h3>
@@ -447,7 +458,7 @@ export default function Home() {
                   </div>
                   <div className="text-xs text-gray-200/75 ml-auto">{((Number(tokenSold.data) + fakeCount) / (targetSold * 1000) * 100 ).toFixed(0)}%</div>
                 </div>
-              </div>
+              </div>}
 
               {isConnected && <div>
                 <h3 className="text-xl text-semibold">
@@ -568,7 +579,7 @@ Get ready to join the blockchain of the future...
 
         <footer className="mt-auto py-6 z-50">
           <div className="max-w-screen-xl w-full mx-auto text-center">
-            All right reserved &copy; 2023 Rapid Chain
+            All right reserved &copy; 2024 Rapid Chain
           </div>
         </footer>
       </main>

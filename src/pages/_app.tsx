@@ -11,7 +11,7 @@ import { bsc , sepolia } from 'wagmi/chains'; // version "^1.2.1"
 import { publicProvider } from 'wagmi/providers/public';
 
 const { chains, publicClient } = configureChains(
-  [sepolia],
+  [bsc],
   [
     publicProvider()
   ]
