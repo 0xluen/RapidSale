@@ -8,7 +8,6 @@ import { useRouter } from "next/router";
 import ABI from "../assets/ABI.json";
 import erc20ABI from "../assets/erc20.json";
 
-import { ethers } from "ethers";
 
 
 export default function Home() {

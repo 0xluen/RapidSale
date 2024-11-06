@@ -7,7 +7,7 @@ import {
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
-import { bsc , sepolia } from 'wagmi/chains'; // version "^1.2.1"
+import { bsc , sepolia } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
 const { chains, publicClient } = configureChains(
