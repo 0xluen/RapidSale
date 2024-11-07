@@ -21,7 +21,7 @@ export default function Home() {
   const targetSold = 78 // * 1000 
   const fakeCount = 0 
 
-  const baseURI = "https://rapid-sale.vercel.app/"
+  const baseURI = "https://sale.rapidchain.io/"
 
 
   const price = 0.07
