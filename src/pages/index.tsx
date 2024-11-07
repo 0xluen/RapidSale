@@ -345,8 +345,8 @@ console.log(usdt_);
           <section className="bg-white/5 backdrop-blur-3xl shadow px-8 py-6 rounded my-12 w-full md:w-3/4 shrink-1 grow-0">
               <div>
                 <h2 className="text-xl text-semibold">
-                  RAPIDCHAIN Privatesale #2 of 2
-                </h2>
+                RAPID CHAIN Public Sale #1 of 3
+                                </h2>
                 <p className="text-light mt-2 text-sm text-gray-200/75">
                 Welcome to the Rapid Chain Public Sale event, building the future of blockchain technology! In this round, Rapid Token ($RAPID) is available for purchase at $0.07 USD. The tokens you acquire should not be transferred to another wallet.
                 </p>
@@ -356,7 +356,7 @@ console.log(usdt_);
                 <div className="w-3/4 mx-auto relative">
                   <input
                     className="px-8 py-4 rounded shadow w-full text-medium outline-emerald-500 text-black"
-                    placeholder="USD Amount"
+                    placeholder="USDT Amount"
                     ref={usdInput}
                   ></input>
                   <img
@@ -400,7 +400,7 @@ console.log(usdt_);
                   }
                   onClick={handleApproveClick}
                   className={
-                    "bg-black disabled:opacity-20 w-full hover:bg-white hover:text-black text-white px-6 py-3 rounded text-md text-semibold transition " +
+                    "bg-white/20 disabled:opacity-20 w-full hover:bg-white hover:text-black text-white px-6 py-3 rounded text-md text-semibold transition " +
                     ( Number(allowanceReadContract.data) >= usdt_ || account.isDisconnected  ? "hidden" : "")
                   }
                 >
@@ -412,7 +412,7 @@ console.log(usdt_);
                   }
                   onClick={handleBuyClick}
                   className={
-                    "bg-black  disabled:opacity-20 w-full hover:bg-white hover:text-black text-white px-6 py-3 rounded text-md text-semibold transition " +
+                    "bg-white/20  disabled:opacity-20 w-full hover:bg-white hover:text-black text-white px-6 py-3 rounded text-md text-semibold transition " +
                     (Number(allowanceReadContract.data)<usdt_ ? "hidden" : "")
                   }
                 >
