@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import ABI from "../assets/ABI.json";
 import erc20ABI from "../assets/erc20.json";
-
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 
 export default function Home() {
@@ -23,7 +23,8 @@ export default function Home() {
 
   const baseURI = "https://sale.rapidchain.io/"
 
-
+  const {openConnectModal} = useConnectModal();
+  
   const price = 0.07
 
   const [referralCode, setReferralCode] = useState("");
@@ -42,6 +43,9 @@ export default function Home() {
     document.execCommand('copy');
     document.body.removeChild(dummyTextarea);
     setContractAddress('Copied Address!')
+    setTimeout(()=>{
+      setContractAddress(text)
+    },3000)
 
   }
 
@@ -410,7 +414,7 @@ console.log(usdt_);
                   disabled={
                     account.isDisconnected && Number(allowanceReadContract.data) >= usdt_
                   }
-                  onClick={handleBuyClick}
+                  onClick={account.isDisconnected ? openConnectModal : handleBuyClick}
                   className={
                     "bg-white/20  disabled:opacity-20 w-full hover:bg-white hover:text-black text-white px-6 py-3 rounded text-md text-semibold transition " +
                     (Number(allowanceReadContract.data)<usdt_ ? "hidden" : "")
