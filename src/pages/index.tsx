@@ -12,7 +12,7 @@ import erc20ABI from "../assets/erc20.json";
 
 export default function Home() {
 
-  const [contractAddress,setContractAddress]=useState("0x228580Db7A5E713755526B49eBec6f68F98cf4b8") /// token kontratı
+  const [contractAddress,setContractAddress]=useState("0xc2eaDEe4481e65b47C6AfA32e39FB72dDeAf9F21") /// token kontratı
 
   const contractSale = "0xB051573989265eAe51aD3c9Ad65Eff01534BA137"
   
@@ -525,7 +525,7 @@ Get ready to join the blockchain of the future...
                   Total Supply:
                 </h3>
                 <div className="flex flex-col items-center gap-2 pt-8 text-center justify-center font-semibold text-xl">
-                  200M
+                  240M
                 </div>
               </div>
               <hr />
