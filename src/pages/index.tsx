@@ -438,7 +438,7 @@ console.log(usdt_);
                
                 <div className="flex flex-col items-center gap-2 mb-5  pt-8 text-center justify-center font-semibold text-xl">
                   <div className="text-xs text-gray-200/75">
-                    ${(Number(tokenSold.data )).toFixed(2)}  / {(Number(tokenSold.data ) / price).toFixed(2)} RAPID
+                    ${ Number(tokenSold.data) > 0  &&  (Number(tokenSold.data )).toFixed(2) + fakeCount}  / {((Number(tokenSold.data )+  fakeCount) / price).toFixed(2)} RAPID
                   </div>
                  
                 </div>
