@@ -19,7 +19,7 @@ export default function Home() {
   const usdtContract = "0x55d398326f99059fF775485246999027B3197955"
 
   const targetSold = 78 // * 1000 
-  const fakeCount = 0 
+  const fakeCount = 3600 
 
   const baseURI = "https://sale.rapidchain.io/"
 
@@ -448,7 +448,9 @@ console.log(usdt_);
                 <h3 className="text-sm text-gray-200/75 absolute top-0 left-0">
                   Funded: ${(Number(tokenSold.data )).toFixed(2) }
                 </h3>
-                <div className="flex flex-col items-center gap-2 pt-8 text-center justify-center font-semibold text-xl">
+                
+                
+               {Number(tokenSold.data) > 0 &&  <div className="flex flex-col items-center gap-2 pt-8 text-center justify-center font-semibold text-xl">
                   <div className="text-xs text-gray-200/75">
                     {Number(tokenSold.data ).toFixed(0)} / {targetSold}.000
                   </div>
@@ -460,7 +462,9 @@ console.log(usdt_);
 
                   </div>
                   <div className="text-xs text-gray-200/75 ml-auto">{((Number(tokenSold.data) + fakeCount) / (targetSold * 1000) * 100 ).toFixed(0)}%</div>
-                </div>
+                </div>}
+
+
               </div>}
 
               {isConnected && <div>
