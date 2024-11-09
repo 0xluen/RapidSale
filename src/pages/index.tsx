@@ -452,7 +452,7 @@ console.log(usdt_);
                 
                {Number(tokenSold.data) > 0 &&  <div className="flex flex-col items-center gap-2 pt-8 text-center justify-center font-semibold text-xl">
                   <div className="text-xs text-gray-200/75">
-                    {Number(tokenSold.data ).toFixed(0)} / {targetSold}.000
+                    {Number(tokenSold.data ).toFixed(0) + fakeCount } / {targetSold}.000
                   </div>
                   <div className="w-full h-2 rounded-full bg-gray-100">
 
