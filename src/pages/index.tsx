@@ -19,7 +19,7 @@ export default function Home() {
   const usdtContract = "0x55d398326f99059fF775485246999027B3197955"
 
   const targetSold = 78 // * 1000 
-  const fakeCount = 3600 
+  const fakeCount = 28600 
 
   const baseURI = "https://sale.rapidchain.io/"
 
@@ -533,7 +533,7 @@ Get ready to join the blockchain of the future...
                   Total Supply:
                 </h3>
                 <div className="flex flex-col items-center gap-2 pt-8 text-center justify-center font-semibold text-xl">
-                  240M
+                  220M
                 </div>
               </div>
               <hr />
